@@ -29,7 +29,7 @@ namespace Periferia.Services
                 .Include(x => x.Cliente)
                 .Include(x => x.ProductosVendidos).ThenInclude(x => x.Producto)
                 .OrderByDescending(x => x.CreatedOn)
-                .ToListAsync();
+                .ToListAsync(); 
         }
     }
 }
