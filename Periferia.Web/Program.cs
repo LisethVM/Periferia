@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Periferia.DataAccess;
 using Periferia.DataAccess.Repository;
+using Periferia.ServiceContracts;
+using Periferia.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,11 @@ builder.Services.AddDbContext<TiendaDbContext>(options =>
 {
     options.UseSqlServer(connection);
 });
+builder.Services.AddScoped<DbContext, TiendaDbContext>();
 
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
+builder.Services.AddTransient<IClientesService,ClientesService>();
+builder.Services.AddTransient<IProductosService, ProductosService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

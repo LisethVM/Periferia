@@ -21,9 +21,12 @@ namespace Periferia.DataAccess
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=.\\SQLSERVER;Database=Periferia;Trusted_Connection=True;");
+            }
         }
     }
 }

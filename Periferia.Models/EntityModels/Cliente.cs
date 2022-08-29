@@ -8,9 +8,9 @@ namespace Periferia.Models.EntityModels
 {
     public class Cliente : EntityBase
     {
-        public int Cedula { get; set; }
+        public long Cedula { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public int Telefono { get; set; }
+        public long Telefono { get; set; }
     }
 }

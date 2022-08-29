@@ -13,10 +13,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Periferia.DataAccess\Periferia.DataAccess.csproj" />
+    <ProjectReference Include="..\Periferia.ServiceContracts\Periferia.ServiceContracts.csproj" />
+    <ProjectReference Include="..\Periferia.Services\Periferia.Services.csproj" />
   </ItemGroup>
 
 </Project>
