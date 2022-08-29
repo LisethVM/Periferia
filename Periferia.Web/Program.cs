@@ -18,6 +18,7 @@ builder.Services.AddScoped<DbContext, TiendaDbContext>();
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
 builder.Services.AddTransient<IClientesService,ClientesService>();
 builder.Services.AddTransient<IProductosService, ProductosService>();
+builder.Services.AddTransient<IVentaClienteService, VentaClienteService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

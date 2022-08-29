@@ -1,0 +1,129 @@
+﻿@model Periferia.Models.EntityModels.VentaCliente
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>VentaCliente</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="form-group">
+            <label asp-for="ClienteId" class="control-label"></label>
+            <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="ValorTotal" class="control-label"></label>
+            <input asp-for="ValorTotal" disabled class="form-control" />
+            <span asp-validation-for="ValorTotal" class="text-danger"></span>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+
+                <tr>
+                    <td colspan="2"><button class="btn btn-success" style="width:100%" id="AddProducto">+</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <input type="button" value="Crear" id="btn-crear" class="btn btn-primary" />
+        </div>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        @{
+            string opts = ViewBag.Productos;
+        }
+            $(document).ready(function () {
+                let contador = 1;
+                $("#AddProducto").click(function () {
+                    contador = contador + 1;
+                    var productos = @Html.Raw(opts);
+                    var productosOption = "";
+                    productos.forEach(function (item, index) {
+                        productosOption += '<option data-valor="' + item.ValorUnitario + '" value="' + item.Id + '">' + item.Nombre + '</option>';
+                    });
+                    $("#tableBody").prepend(
+                        '<tr class="addedProducto" id="' + contador + '">' +
+                        '<td>' +
+                        '<select id="productoSeleccionado' + contador + '" >' +
+                        productosOption +
+                        '</select>' +
+                        '</td>' +
+                        '<td><input type="text" class="cantidadInput" id = "cantidadSeleccionada' + contador + '" /></td>' +
+                        '</tr>');
+
+                        $("#cantidadSeleccionada"+contador).on('input',function(){
+                            CalcularTotal();
+                        });
+                });
+                function CalcularTotal() {
+                    var total = 0;
+                    $(".cantidadInput").each(function (item, index) {
+                        var padreId = $(this).parent().parent().attr('id');
+                        var cantidad = $(this).val();
+                        var valor = $("#productoSeleccionado" + padreId + " option:selected").data("valor");
+                        total = total + (cantidad * valor);
+                    });
+                    $("#ValorTotal").val(total);
+                }
+                $("#btn-crear").click(function(){
+                    var total = $("#ValorTotal").val();
+                    if (isNaN(total) || total === 0){
+                        alert("Debe seleccionar al menos un producto y darle una cantidad mayor a cero");
+                        return;
+                    }
+                    var ClienteId = $("#ClienteId").val();
+                    var productos=[];
+                    $(".addedProducto").each(function(){
+                        var padreId = $(this).attr('id');
+                        var productoId = $("#productoSeleccionado" + padreId).val();
+                        var cantidad = $("#cantidadSeleccionada"+padreId).val();
+                        productos.push({
+                            ProductoId:productoId,
+                            Cantidad: parseInt(cantidad)
+                        });
+                    });
+                    var modelJson = {
+                        "ClienteId": ClienteId,
+                        "ValorTotal": parseInt(total),
+                        "ProductosVendidos" : productos
+                    }
+                    $.ajax({
+                        url:"Create",
+                        type: "POST", 
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(modelJson),
+                        complete:function(xhr,status){
+                            window.location.href = "/VentaClientes/Index";
+
+                        }
+                    });
+
+                });
+            });
+    </script>
+    }
+
